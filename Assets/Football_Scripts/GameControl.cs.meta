@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 417386564869aff44bc785895fcc80bc
+timeCreated: 1478298023
+licenseType: Free
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - target: {instanceID: 0}
+  - keeper: {instanceID: 0}
+  - scoreText: {instanceID: 0}
+  - highscoreText: {instanceID: 0}
+  - otherClip: {fileID: 8300000, guid: f4e32dee48682442c883320d069f24c8, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
