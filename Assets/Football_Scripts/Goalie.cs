@@ -22,7 +22,7 @@ public Vector3 Target;
 	if(timer >= newtarget){
 		newTarget();
 		timer = 0;
-		nav.speed = 1;
+		nav.speed = 5;
 		GetComponent<Animation>().Play("StandSave");
 	}
 	}

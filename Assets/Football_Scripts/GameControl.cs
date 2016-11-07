@@ -13,20 +13,20 @@ public class GameControl : MonoBehaviour
     //variables for determining the shot power and position
     public float power;  //power at which the ball is shot
     private Vector3 footballPos; //initial football position for replacing the ball at the same posiiton
-    private Vector3 footballRot;
+    //private Vector3 footballRot;
    
 
     public bool canShoot = true;  //flag to check if shot can be taken
-    public  int scorePlayer = 0;  //score of player
+    public static int scorePlayer = 0;  //score of player
     public int scoreOpponent = 0; //score of oponent
     public int turn = 0;   //0 for striker, 1 for goalie
     public bool isGameOver = false; //flag for game over detection
     Vector3 oppKickDir;   //direction at which the ball is kicked by opponent
     public int shotsTaken = 0;  //number of rounds of penalties taken
     private bool returned = true;  //flag to check if the ball is returned to its initial position
-    public bool isKickedPlayer = false; //flag to check if the player has kicked the ball
-    public bool isKickedOpponent = false; //flag to check if the opponent has kicked the ball
-    public bool triggered = false;
+    
+    
+    public static bool triggered = false;
     public bool click = false; // flag to check if clicked the screen
      //Spaw:
     public GameObject target; 
@@ -53,7 +53,7 @@ public class GameControl : MonoBehaviour
         dragDistance = Screen.height * 10 / 100; //20% of the screen should be swiped to shoot
         Physics.gravity = new Vector3(0, -20, 0); //reset the gravity of the ball to 20
         footballPos = transform.position;  //store the initial position of the football
-        footballRot = transform.rotation;
+      
             //High Score
           if (PlayerPrefs.GetFloat("HighScore") != null) {
             highscore = PlayerPrefs.GetFloat("HighScore");
@@ -81,7 +81,7 @@ public class GameControl : MonoBehaviour
         {   
              
              Time.timeScale = 0; //Stop all
-           
+          
             button.gameObject.SetActive(true);//SetActive Buttons
             highscoreText.gameObject.SetActive(true); // Set Active high score text 
             
@@ -94,20 +94,17 @@ public class GameControl : MonoBehaviour
             { //if its users turn to shoot and if the game is not over
                 playerLogic();   //call the playerLogic fucntion
             }
-            else if (turn == 1 && !isGameOver)
-            { //if its opponent's turn to shoot
-                //opponentLogic(); //call the respective function
-            }
+           
            
         }
 
         lp = Input.mousePosition;
-       // Debug.Log(lp);
+       
 
 
 
         //check if the scores differ by a value of 1
-if((scorePlayer==scoreOpponent+2) ||(scoreOpponent==scorePlayer+1)){ 
+if((scoreOpponent==scorePlayer+1)){ 
 isGameOver = true;
 }
 
@@ -131,14 +128,14 @@ isGameOver = true;
 
                if (lp.y > fp.y)  //If the movement was up
                        
-                            GetComponent<Rigidbody>().AddForce((new Vector3((lp.x-fp.x)/Screen.height*30,15, 15)) * power);
+                            GetComponent<Rigidbody>().AddForce((new Vector3((lp.x-fp.x)/Screen.height*34,10, 20)) * power);
                      //AudioSource sound = gameObject.GetComponent<AudioSource>();
                                  GetComponent<AudioSource>().Play();
                    
                
                     canShoot = false;
                   returned = false;
-                isKickedPlayer = true;
+                
                
                StartCoroutine(ReturnBall());
                 click = true;
@@ -165,15 +162,15 @@ isGameOver = true;
         yield return new WaitForSeconds(1.0f);  //set a delay of 1 seconds before the ball is returned
         GetComponent<Rigidbody>().velocity = Vector3.zero;   //set the velocity of the ball to zero
         GetComponent<Rigidbody>().angularVelocity = Vector3.zero;  //set its angular vel to zero
-         transform.rotation = footballRot;
-           //repositon it to initial position:
-     if(scorePlayer>5){ // score greater than 5 : random position.x
+       //  transform.Rotate = footballRot;
+           //REPOSITION IT TO INITIAL POSITION:
+     if(scorePlayer>=5){ // score greater than 5 : random position.x
       xball = Random.Range(-0.5f, 0.5f);
       ballPos = new Vector3(xball, footballPos.y, footballPos.z);
       
        transform.position = ballPos;
      }
-     if(scorePlayer <=5){ 
+     if(scorePlayer <5){ 
          transform.position = footballPos;
      }
         
@@ -182,15 +179,16 @@ isGameOver = true;
      //Spaw:
                  int spawnPointIndex = Random.Range (0, keepPoints.Length);
 
-        // Create an instance of the enemy prefab at the randomly selected spawn point's position and rotation.
+        // Create an instance of the keeper prefab at the randomly selected spawn point's position and rotation.
         Instantiate (keeper, keepPoints[spawnPointIndex].position, keepPoints[spawnPointIndex].rotation);
           
 }
         if (turn == 1)
             turn = 0;
-        canShoot = true;
+            canShoot = true;
                returned = true;
-               isKickedPlayer = false;
+              
+                triggered = false; 
     
     }
 
@@ -201,24 +199,21 @@ isGameOver = true;
         //check if the football has triggered an object named GoalLine and triggered is not true
         if (other.gameObject.tag == "target" && !triggered)
         {   
-             StartCoroutine(Destroy());
-            
+              StartCoroutine(Destroy());
+              scorePlayer++;
          
             
-             
-             scorePlayer++;
-            //if the scorer is the player
-            if (turn == 1)
-            
-
             triggered = true;       //check triggered to true
 
         }
+       
     }
      IEnumerator Destroy()
     {   
         yield return new WaitForSeconds(0.4f);
+       
        Destroy (GameObject.FindWithTag("target"));
+       
         //Spaw:
                  int spawnPointIndex = Random.Range (0, spawnPoints.Length);
                  float xTarget = Random.Range (-1.5f, 1.7f);
@@ -235,6 +230,7 @@ public void RePlay()
    
     {
 		 Application.LoadLevel(Application.loadedLevel);
+          scorePlayer = 0;
     }
 
 
