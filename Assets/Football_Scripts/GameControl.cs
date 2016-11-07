@@ -53,7 +53,7 @@ public class GameControl : MonoBehaviour
         dragDistance = Screen.height * 10 / 100; //20% of the screen should be swiped to shoot
         Physics.gravity = new Vector3(0, -20, 0); //reset the gravity of the ball to 20
         footballPos = transform.position;  //store the initial position of the football
-         
+        footballRot = transform.rotation;
             //High Score
           if (PlayerPrefs.GetFloat("HighScore") != null) {
             highscore = PlayerPrefs.GetFloat("HighScore");
@@ -165,6 +165,7 @@ isGameOver = true;
         yield return new WaitForSeconds(1.0f);  //set a delay of 1 seconds before the ball is returned
         GetComponent<Rigidbody>().velocity = Vector3.zero;   //set the velocity of the ball to zero
         GetComponent<Rigidbody>().angularVelocity = Vector3.zero;  //set its angular vel to zero
+         transform.rotation = footballRot;
            //repositon it to initial position:
      if(scorePlayer>5){ // score greater than 5 : random position.x
       xball = Random.Range(-0.5f, 0.5f);
