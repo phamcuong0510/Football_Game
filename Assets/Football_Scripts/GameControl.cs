@@ -50,7 +50,7 @@ public class GameControl : MonoBehaviour
     void Start()
     {
         Time.timeScale = 1;    //set it to 1 on start so as to overcome the effects of restarting the game by script
-        dragDistance = Screen.height * 10 / 100; //20% of the screen should be swiped to shoot
+        dragDistance = Screen.height * 3 / 100; //3% of the screen should be swiped to shoot
         Physics.gravity = new Vector3(0, -20, 0); //reset the gravity of the ball to 20
         footballPos = transform.position;  //store the initial position of the football
       
@@ -125,12 +125,13 @@ isGameOver = true;
             { //if its users turn to shoot and if the game is not over
     if (Mathf.Abs(lp.x - fp.x) > dragDistance || Mathf.Abs(lp.y - fp.y) > dragDistance)
                {   //It's a drag
+               GetComponent<AudioSource>().Play();
 
                if (lp.y > fp.y)  //If the movement was up
                        
-                            GetComponent<Rigidbody>().AddForce((new Vector3((lp.x-fp.x)/Screen.height*34,10, 20)) * power);
+                            GetComponent<Rigidbody>().AddForce((new Vector3((lp.x-fp.x)/Screen.height*170,10, 20)) * power);
                      //AudioSource sound = gameObject.GetComponent<AudioSource>();
-                                 GetComponent<AudioSource>().Play();
+                                 
                    
                
                     canShoot = false;
@@ -162,7 +163,7 @@ isGameOver = true;
         yield return new WaitForSeconds(1.0f);  //set a delay of 1 seconds before the ball is returned
         GetComponent<Rigidbody>().velocity = Vector3.zero;   //set the velocity of the ball to zero
         GetComponent<Rigidbody>().angularVelocity = Vector3.zero;  //set its angular vel to zero
-       //  transform.Rotate = footballRot;
+       transform.rotation = Quaternion.identity;
            //REPOSITION IT TO INITIAL POSITION:
      if(scorePlayer>=5){ // score greater than 5 : random position.x
       xball = Random.Range(-0.5f, 0.5f);
